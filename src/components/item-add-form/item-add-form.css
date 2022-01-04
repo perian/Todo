@@ -2,3 +2,8 @@
   margin-top: 10px;
   background-color: khaki;
 }
+
+.item-add-form input {
+  margin-top: 10px;
+  margin-right: 10px;
+}
