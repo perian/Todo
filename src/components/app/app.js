@@ -4,21 +4,32 @@ import AppHeader from '../app-header';
 import SearchPanel from '../search-panel';
 import TodoList from '../todo-list';
 import ItemStatusFilter from '../item-status-filter';
+import ItemAddForm from '../item-add-form';
 
 import './app.css';
 
 export default class App extends Component {
+
+  maxId = 100;
+
   state = {
+    done: false,
+    important: false,
     todoData: [
-      { label: 'Drink Coffee', important: false, id: 1 },
-      { label: 'Make Awesome App', important: true, id: 2 },
-      { label: 'Have a lunch', important: false, id: 3 }
+      this.createTodoItem('Drink Coffee'),
+      this.createTodoItem('Make Awesome App'),
+      this.createTodoItem('Have a lunch')
     ]
   };
+
+  getElementIndex = (array, id) => {
+    return array.findIndex((el) => el.id === id)
+  };
+
   
   deleteItem = (id) => {
     this.setState(({todoData}) => {
-      const idx = todoData.findIndex((el) => el.id === id);
+      const idx = this.getElementIndex(todoData, id);
 
       const newArray = [
         ...todoData.slice(0, idx),
@@ -29,6 +40,70 @@ export default class App extends Component {
         todoData: newArray
       };
     }); 
+  };
+
+  createTodoItem(label) {
+    return {
+      label: label,
+      done: false,
+      important: false,
+      id: this.maxId++
+    }
+  }
+
+  addItem = (label) => {
+    const newItem = this.createTodoItem(label)
+
+    this.setState(({todoData}) => {
+      const newArray = [
+        ...todoData,
+        newItem
+      ];
+
+      return {
+        todoData: newArray
+      }
+    });
+  };
+
+  onToggleImportant = (id) => {
+    this.setState(({todoData}) => {
+      const idx = this.getElementIndex(todoData, id);
+
+
+      const oldItem = todoData[idx];
+      const newItem = {...oldItem, important: !oldItem.important};
+
+      const newArray = [
+        ...todoData.slice(0, idx),
+        newItem,
+        ...todoData.slice(idx + 1)
+      ];
+
+      return {
+        todoData: newArray
+      }
+    });
+  };
+
+  onToggleDone = (id) => {
+    this.setState(({todoData}) => {
+      const idx = this.getElementIndex(todoData, id);
+
+
+      const oldItem = todoData[idx];
+      const newItem = {...oldItem, done: !oldItem.done};
+
+      const newArray = [
+        ...todoData.slice(0, idx),
+        newItem,
+        ...todoData.slice(idx + 1)
+      ];
+
+      return {
+        todoData: newArray
+      }
+    });
   };
 
   render() {
@@ -42,7 +117,13 @@ export default class App extends Component {
   
         <TodoList 
           todos={this.state.todoData}
-          onDeleted={this.deleteItem}/>
+          onDeleted={this.deleteItem}
+          onToggleDone={this.onToggleDone}
+          onToggleImportant={this.onToggleImportant}
+        />
+        <ItemAddForm
+          onAdd={() => this.addItem('a')}
+        />
       </div>
     );
   }
