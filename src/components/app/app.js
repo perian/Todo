@@ -66,63 +66,56 @@ export default class App extends Component {
     });
   };
 
+  toggleProperty(array, id, property) {
+    const idx = this.getElementIndex(array, id);
+    
+    const oldItem = array[idx];
+    const newItem = {...oldItem, [property]: !oldItem[property]};
+
+    return [
+      ...array.slice(0, idx),
+      newItem,
+      ...array.slice(idx + 1)
+    ];
+  }
+
   onToggleImportant = (id) => {
     this.setState(({todoData}) => {
-      const idx = this.getElementIndex(todoData, id);
-
-
-      const oldItem = todoData[idx];
-      const newItem = {...oldItem, important: !oldItem.important};
-
-      const newArray = [
-        ...todoData.slice(0, idx),
-        newItem,
-        ...todoData.slice(idx + 1)
-      ];
-
       return {
-        todoData: newArray
+        todoData: this.toggleProperty(todoData, id, 'important')
       }
     });
   };
 
   onToggleDone = (id) => {
     this.setState(({todoData}) => {
-      const idx = this.getElementIndex(todoData, id);
-
-
-      const oldItem = todoData[idx];
-      const newItem = {...oldItem, done: !oldItem.done};
-
-      const newArray = [
-        ...todoData.slice(0, idx),
-        newItem,
-        ...todoData.slice(idx + 1)
-      ];
-
       return {
-        todoData: newArray
+        todoData: this.toggleProperty(todoData, id, 'done')
       }
     });
   };
 
   render() {
+    const {todoData} = this.state
+    const doneCount = todoData.filter((el) => el.done).length;
+    const todoCount = todoData.length - doneCount;
+    
     return (
       <div className="todo-app">
-        <AppHeader toDo={1} done={3} />
+        <AppHeader toDo={todoCount} done={doneCount} />
         <div className="top-panel d-flex">
           <SearchPanel />
           <ItemStatusFilter />
         </div>
   
         <TodoList 
-          todos={this.state.todoData}
+          todos={todoData}
           onDeleted={this.deleteItem}
           onToggleDone={this.onToggleDone}
           onToggleImportant={this.onToggleImportant}
         />
         <ItemAddForm
-          onAdd={() => this.addItem('a')}
+          onItemAdd={this.addItem}
         />
       </div>
     );
