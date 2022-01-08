@@ -23,7 +23,7 @@ export default class ItemAddForm extends Component {
   }
 
   render() {
-        const {label} = this.state
+    const {label} = this.state
 
     return (
       <form className="item-add-form d-flex"
