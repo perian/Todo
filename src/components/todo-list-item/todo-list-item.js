@@ -1,62 +1,48 @@
-import React, {Component} from "react";
-import "./todo-list-item.css";
+import React, {Component} from 'react';
 
-export default class ToDoListItem extends Component {
-  
+import './todo-list-item.css';
+
+export default class TodoListItem extends Component {
   render() {
-    const {label, done, important, onDeleted, onToggleImportant, onToggleDone} = this.props;
-
-    let classNames = 'todo-list-item';
+    const {
+      label,
+      onDeleted,
+      done,
+      onToggleDone,
+      important,
+      onToggleImportant
+    } = this.props;
+    
+    let className = `todo-list-item`;
     if (done) {
-      classNames += ' done';
+      className += ` done`;
     }
+
     if (important) {
-      classNames += ' important';
+      className += ` important`;
     }
-    const style = {
-      color: important ? 'steelblue' : 'black',
-      fontWeight: important ? 'bold' : 'normal'
-    };
-  
+
     return (
-      <span className={classNames}>
+      <span className={className}>
         <span
           className="todo-list-item-label"
-          style={style}
           onClick={onToggleDone}>
-        {label}
+          {label}
         </span>
+
         <button type="button"
-          className="btn btn-outline-success btn-sm float-right"
-            onClick={onToggleImportant}>
-            <i className="fa fa-exclamation" />
+                className="btn btn-outline-success btn-sm float-right"
+                onClick={onToggleImportant}>
+          <i className="fa fa-exclamation" />
         </button>
+
         <button type="button"
-          className="btn btn-outline-danger btn-sm float-right"
-          onClick={onDeleted}>
+                className="btn btn-outline-danger btn-sm float-right"
+                onClick={onDeleted}>
           <i className="fa fa-trash-o" />
         </button>
-      </span>
+     </span>
     );
   }
-}
-
-// Как понять нужно использовать функциональный компонент или компонент-класс? если компоненту нужно работать с внутренним состоянием то комп-класс
-
-// в чем как разница вызывать функцию
-// export default class ToDoListItem extends Component {
-//   constructor() {
-//     super()
-//     this.onLabelClick = () => {
-//       console.log(`done ${this.props.label}`)
-//     }
-//   }
-//  
-// ИЛИ
-// 
-// export default class ToDoListItem extends Component {
-  // export default class ToDoListItem extends Component {
-    //   this.onLabelClick = () => {
-    //       console.log(`done ${this.props.label}`)
-    //     }
+};
 
